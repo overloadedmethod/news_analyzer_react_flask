@@ -39,13 +39,18 @@ At&sources=bbc-news&apiKey=${token}
 `;
 
 export const NewsAnalyzer = () => {
-  const [news, setNews] = useState();
-  const example = Example;
+  const [news, setNews] = useState("");
+  useEffect(() => {
+    fetch("http://localhost:5000/")
+      .then((resp) => resp.text())
+      .then(setNews);
+  }, []);
   return (
     <Box>
       <RefreshPanel>
         <FetchNewsFeed>Fetch News</FetchNewsFeed>
       </RefreshPanel>
+      {news}
     </Box>
   );
 };

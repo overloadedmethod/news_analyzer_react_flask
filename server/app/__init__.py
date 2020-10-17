@@ -18,10 +18,7 @@ mongo = PyMongo(app)
 
 @app.route("/", methods=["GET"])
 def index_page():
-    # mongo.db.create_collection("news")
-    result = add_together.delay(23, 42)
-    result = result.wait()
-    return f"hello world db is exists {mongo.db.list_collection_names()} celery result {result}"
+    return f"hello world"
 
 
 # def view_logs():
