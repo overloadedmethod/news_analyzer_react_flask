@@ -1,7 +1,7 @@
 import requests
 
 
-class News_Fetcher:
+class Fetcher:
     url = "http://newsapi.org/v2/everything"
     language = "en"
     page_size = 5
@@ -10,7 +10,7 @@ class News_Fetcher:
     amount = 5
 
     def __init__(self, token) -> None:
-        self.api_token = token
+        self.api_key = token
 
     def set_token(self, api_key):
         self.api_key = api_key

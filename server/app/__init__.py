@@ -28,7 +28,7 @@ def index_page():
 def news_and_stats():
     articles, stats = repo.fetch_news()
     if any(articles):
-        return jsonify({articles, stats})
+        return jsonify({"articles": articles, "stats": stats})
 
     fetched = fetch_last_news(5)
     articles = fetched["articles"] if "articles" in fetched else []
