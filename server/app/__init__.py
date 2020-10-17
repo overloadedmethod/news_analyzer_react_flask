@@ -1,11 +1,12 @@
 __author__ = "Vladimir"
 
 from app.celery import make_celery
+from app.repo import Repo
 from settings import CELERY_BROKER, CELERY_RESULTS, MONGODB_URI
-from flask import Flask
+from flask import Flask, jsonify
 from flask_pymongo import PyMongo
-
-from .tasks import add_together
+from app.words_utils import proccess_articles
+from .tasks import add_together, fetch_for_day, fetch_last_news
 
 app = Flask(__name__)
 app.config["CELERY_BROKER"] = CELERY_BROKER
@@ -15,15 +16,22 @@ celery = make_celery(app)
 
 mongo = PyMongo(app)
 
+repo = Repo(mongo)
+
 
 @app.route("/", methods=["GET"])
 def index_page():
     return f"hello world"
 
 
-# def view_logs():
-#     from pprint import pprint
+@app.route("/news", methods=["GET"])
+def news_and_stats():
+    articles, stats = repo.fetch_news()
+    if any(articles):
+        return jsonify({articles, stats})
 
-#     # fetch all logs and show them
-#     data = list(db.page_access_log.find({}))
-#     pprint(data)
+    fetched = fetch_last_news(5)
+    articles = fetched["articles"] if "articles" in fetched else []
+    stats = proccess_articles(fetched)
+    repo.store_news(articles, stats)
+    return jsonify({"articles": articles, "stats": stats})

@@ -48,4 +48,4 @@ def proccess_articles(response) -> Dict[str, int]:
     result = {}
     for article in response["articles"]:
         result = merge_word_counts(result, get_article_count(article))
-    return sort_count_descending(result)
+    return result
