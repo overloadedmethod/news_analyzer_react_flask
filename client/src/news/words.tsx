@@ -34,7 +34,7 @@ export const Words = () => {
 
   return (
     <WordsBox>
-      {Object.entries(words).map((word, amount) => (
+      {Object.entries(words).map(([word, amount]) => (
         <WordBox key={word}>
           <Word>{word}</Word>
           <Amount>{amount}</Amount>
