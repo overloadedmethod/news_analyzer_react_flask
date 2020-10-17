@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import Example from "./example";
+import NewsContext, { NewsProvider } from "./context";
 
 const Box = styled.div`
   background-color: #f7fff7;
@@ -20,38 +21,57 @@ const RefreshPanel = styled.div`
   }
 `;
 
-const FetchNewsFeed = styled.div`
+const Button = styled.div`
   cursor: pointer;
   border-radius: 0.5rem;
   background-color: #2d848a;
   color: white;
-  /* height: 1.5rem; */
   width: auto;
   box-sizing: border-box;
   padding: 0.5rem 1rem;
+`;
+
+const URL = styled.a`
+  text-decoration: none;
+  color: white;
+`;
+
+const FetchNewsFeed = styled(Button)`
   margin-left: auto;
 `;
 
 const token = "7dd941adac8141a3a12db7ff602f712d";
 
-const newsAPI = `http://newsapi.org/v2/everything?language=en&pageSize=5&sortBy=published
-At&sources=bbc-news&apiKey=${token}
+const Input = styled.input`
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 `;
 
-export const NewsAnalyzer = () => {
-  const [news, setNews] = useState("");
-  useEffect(() => {
-    fetch("http://localhost:5000/")
-      .then((resp) => resp.text())
-      .then(setNews);
-  }, []);
+export const NewsAnalyzerHeader = () => {
+  const [store, dispatch] = useContext(NewsContext);
+
+  const onInput = (val: any) =>
+    dispatch({ type: "SET_TOKEN", payload: val.target.value });
   return (
-    <Box>
-      <RefreshPanel>
-        <FetchNewsFeed>Fetch News</FetchNewsFeed>
-      </RefreshPanel>
-      {news}
-    </Box>
+    <RefreshPanel>
+      <Button>
+        <URL target="_blank" href="https://newsapi.org/account">
+          Acquire API Token
+        </URL>
+      </Button>
+      <Input placeholder="Provided token" onChange={onInput}></Input>
+      <FetchNewsFeed>Fetch News</FetchNewsFeed>
+    </RefreshPanel>
+  );
+};
+
+export const NewsAnalyzer = () => {
+  return (
+    <NewsProvider>
+      <Box>
+        <NewsAnalyzerHeader />
+      </Box>
+    </NewsProvider>
   );
 };
 
