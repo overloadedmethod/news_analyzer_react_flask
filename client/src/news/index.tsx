@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Example from "./example";
 
 const Box = styled.div`
   background-color: #f7fff7;
@@ -9,17 +10,18 @@ const Box = styled.div`
 
 const RefreshPanel = styled.div`
   display: inline-flex;
-
   background-color: #c1dff0;
   width: 100%;
+  box-sizing: border-box;
   height: auto;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0rem;
   & > * {
     margin: 0.5rem 1rem;
   }
 `;
 
 const FetchNewsFeed = styled.div`
+  cursor: pointer;
   border-radius: 0.5rem;
   background-color: #2d848a;
   color: white;
@@ -36,20 +38,9 @@ const newsAPI = `http://newsapi.org/v2/everything?language=en&pageSize=5&sortBy=
 At&sources=bbc-news&apiKey=${token}
 `;
 
-// async function fetchNews() {
-//   const val = await fetch(newsAPI, {
-//     method: "get",
-//   }).then((resp) => resp.json());
-//   return val;
-// }
-
 export const NewsAnalyzer = () => {
   const [news, setNews] = useState();
-
-  // useEffect(() => {
-  //   fetchNews().then(setNews);
-  // }, []);
-
+  const example = Example;
   return (
     <Box>
       <RefreshPanel>

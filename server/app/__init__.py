@@ -1,44 +1,32 @@
 __author__ = "Vladimir"
 
-from celery import Celery
-from flask import Flask, render_template
-from pymongo import MongoClient
+from app.celery import make_celery
+from settings import CELERY_BROKER, CELERY_RESULTS, MONGODB_URI
+from flask import Flask
+from flask_pymongo import PyMongo
 
-from .constants import *
+from .tasks import add_together
 
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__)
+app.config["CELERY_BROKER"] = CELERY_BROKER
+app.config["CELERY_RESULTS"] = CELERY_RESULTS
+app.config["MONGO_URI"] = MONGODB_URI
+celery = make_celery(app)
 
-app.config['CELERY_BROKER_URL'] = MONGODB_CON_STR
-app.config['CELERY_RESULT_BACKEND'] = MONGODB_CON_STR
-
-db = MongoClient(MONGODB_URL)[DB_NAME]
-
-celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
-celery.conf.update(app.config)
-
-from .task import check_who_and_where
+mongo = PyMongo(app)
 
 
-@app.route('/')
+@app.route("/", methods=["GET"])
 def index_page():
-    check_who_and_where(page='index')
-    return render_template('index.html')
+    # mongo.db.create_collection("news")
+    result = add_together.delay(23, 42)
+    result = result.wait()
+    return f"hello world db is exists {mongo.db.list_collection_names()} celery result {result}"
 
 
-@app.route('/about')
-def about_page():
-    check_who_and_where(page='about')
-    return render_template('about.html')
+# def view_logs():
+#     from pprint import pprint
 
-
-@app.route('/contact')
-def contact_page():
-    return render_template('contact.html')
-
-
-def view_logs():
-    from pprint import pprint
-
-    # fetch all logs and show them
-    data = list(db.page_access_log.find({}))
-    pprint(data)
+#     # fetch all logs and show them
+#     data = list(db.page_access_log.find({}))
+#     pprint(data)
