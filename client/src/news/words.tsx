@@ -11,3 +11,5 @@ export const Words = () => {
     <WordsBox>{Object.entries(words).map((word, amount) => word)}</WordsBox>
   );
 };
+
+export default Words;

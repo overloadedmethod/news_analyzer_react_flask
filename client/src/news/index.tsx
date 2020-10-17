@@ -1,7 +1,15 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import styled from "styled-components";
-import Example from "./example";
+
 import NewsContext, { NewsProvider } from "./context";
+import NewsArticles from "./articles";
+import NewsWords from "./words";
 
 const Box = styled.div`
   background-color: #f7fff7;
@@ -48,10 +56,19 @@ const Input = styled.input`
 `;
 
 export const NewsAnalyzerHeader = () => {
-  const [store, dispatch] = useContext(NewsContext);
+  const [{ access_token }, dispatch] = useContext(NewsContext);
 
   const onInput = (val: any) =>
     dispatch({ type: "SET_TOKEN", payload: val.target.value });
+
+  const getNews = useCallback(async () => {
+    const resp = await fetch("/news", { method: "get" });
+    const result = await resp.json();
+
+    dispatch({ type: "SET_ARTICLES", payload: result.articles });
+    dispatch({ type: "SET_WORDS", payload: result.stats });
+  }, [dispatch]);
+
   return (
     <RefreshPanel>
       <Button>
@@ -60,7 +77,7 @@ export const NewsAnalyzerHeader = () => {
         </URL>
       </Button>
       <Input placeholder="Provided token" onChange={onInput}></Input>
-      <FetchNewsFeed>Fetch News</FetchNewsFeed>
+      <FetchNewsFeed onClick={getNews}>Fetch News</FetchNewsFeed>
     </RefreshPanel>
   );
 };
@@ -70,6 +87,8 @@ export const NewsAnalyzer = () => {
     <NewsProvider>
       <Box>
         <NewsAnalyzerHeader />
+        <NewsWords />
+        <NewsArticles />
       </Box>
     </NewsProvider>
   );

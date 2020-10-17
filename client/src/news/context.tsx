@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useReducer } from "react";
+import React, { createContext, useReducer } from "react";
 
 const initialState = {
   articles: [] as {
@@ -23,7 +23,9 @@ const actions: Record<
 const reducer = (
   state = initialState,
   { type, payload }: { type: string; payload: any }
-) => actions[type]?.(state, payload) ?? state;
+) => {
+  return actions[type]?.(state, payload) ?? state;
+};
 
 const NewsContext = createContext([initialState, console.info] as [
   typeof initialState,
