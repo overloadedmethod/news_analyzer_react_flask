@@ -106,8 +106,8 @@ export const NewsAnalyzerHeader = () => {
       <FetchNewsFeed onClick={getNews(days, amount)}>
         Fetch explicit amount and days
       </FetchNewsFeed>
-      <FetchNewsFeed onClick={getNews(-1, 100)}>Fetch Last 100</FetchNewsFeed>
-      <FetchNewsFeed onClick={getNews(7, -1)}>Fetch Last 7 days</FetchNewsFeed>
+      <FetchNewsFeed onClick={getNews(7, 100)}>Fetch Last 100</FetchNewsFeed>
+      <FetchNewsFeed onClick={getNews(7, 200)}>Fetch Last 7 days</FetchNewsFeed>
     </RefreshPanel>
   );
 };

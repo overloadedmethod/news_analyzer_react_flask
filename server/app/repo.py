@@ -28,3 +28,14 @@ class Repo:
                 "timestamp": int(datetime.utcnow().timestamp()),
             }
         )
+
+    def store_day(self, day, articles, stats):
+        self.driver.db.days.insert_one(
+            {
+                "day": day,
+                "articles": articles,
+                "stats": stats,
+                "amount": len(articles),
+                "timestamp": int(datetime.utcnow().timestamp()),
+            }
+        )
