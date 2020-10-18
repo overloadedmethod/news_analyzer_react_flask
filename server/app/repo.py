@@ -7,8 +7,9 @@ class Repo:
         self.driver = driver
 
     def fetch_news(self, amount: int):
-        vals = self.driver.db.articles.find_one()
-        # return [], {}
+        vals = self.driver.db.articles.find_one({"amount": amount})
+        if not vals:
+            return None, None
         return vals["articles"], vals["stats"]
 
     def store_news(self, articles, stats):
