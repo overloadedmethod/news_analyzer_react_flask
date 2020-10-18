@@ -10,7 +10,7 @@ const initialState = {
   amount: 5,
 };
 
-type NewsActions = "SET_ARTICLES" | "SET_WORDS" | "SET_TOKEN";
+type NewsActions = "SET_ARTICLES" | "SET_WORDS" | "SET_TOKEN" | "SET_AMOUNT";
 
 const actions: Record<
   string,
@@ -19,6 +19,7 @@ const actions: Record<
   SET_ARTICLES: (prev, articles) => ({ ...prev, articles }),
   SET_WORDS: (prev, words) => ({ ...prev, words }),
   SET_TOKEN: (prev, access_token) => ({ ...prev, access_token }),
+  SET_AMOUNT: (prev, amount) => ({ ...prev, amount }),
 };
 
 const reducer = (

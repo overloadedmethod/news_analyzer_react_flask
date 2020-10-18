@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from app.words_utils import proccess_articles
 from .tasks import add_together, fetch_for_day, fetch_last_news
+from app.news_fetcher import Fetcher
 
 app = Flask(__name__)
 app.config["CELERY_BROKER"] = CELERY_BROKER
@@ -32,7 +33,7 @@ def news_and_stats():
     if articles:
         return jsonify({"articles": articles, "stats": stats})
 
-    fetched = fetch_last_news(token, amount)
+    fetched = Fetcher(token).set_amount(amount).fetch()
     articles = fetched["articles"] if "articles" in fetched else []
     stats = proccess_articles(fetched)
     repo.store_news(articles, stats)

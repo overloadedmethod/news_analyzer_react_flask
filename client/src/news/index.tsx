@@ -48,8 +48,6 @@ const FetchNewsFeed = styled(Button)`
   margin-left: auto;
 `;
 
-const token = "7dd941adac8141a3a12db7ff602f712d";
-
 const Input = styled.input`
   border-radius: 0.5rem;
   padding: 0.5rem;
@@ -58,8 +56,11 @@ const Input = styled.input`
 export const NewsAnalyzerHeader = () => {
   const [{ access_token, amount }, dispatch] = useContext(NewsContext);
 
-  const onInput = (val: any) =>
+  const onTokenChange = (val: any) =>
     dispatch({ type: "SET_TOKEN", payload: val.target.value });
+
+  const onAmountChange = (val: any) =>
+    dispatch({ type: "SET_AMOUNT", payload: val.target.value });
 
   const getNews = useCallback(async () => {
     const resp = await fetch(`/news?token=${access_token}&amount=${amount}`, {
@@ -78,7 +79,14 @@ export const NewsAnalyzerHeader = () => {
           Acquire API Token
         </URL>
       </Button>
-      <Input placeholder="Provided token" onChange={onInput}></Input>
+      <Input placeholder="Provided token" onChange={onTokenChange}></Input>
+      <Input
+        onChange={onAmountChange}
+        placeholder="amount"
+        value={amount}
+        type="number"
+        min={1}
+        max={500}></Input>
       <FetchNewsFeed onClick={getNews}>Fetch News</FetchNewsFeed>
     </RefreshPanel>
   );
