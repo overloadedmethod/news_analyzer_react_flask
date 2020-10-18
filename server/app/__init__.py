@@ -15,7 +15,7 @@ app.config["CELERY_RESULTS"] = CELERY_RESULTS
 app.config["MONGO_URI"] = MONGODB_URI
 celery = make_celery(app)
 
-mongo = PyMongo(app)
+mongo = PyMongo(app, f"{MONGODB_URI}/news_analyzer")
 
 repo = Repo(mongo)
 
@@ -38,3 +38,9 @@ def news_and_stats():
     stats = proccess_articles(fetched)
     repo.store_news(articles, stats)
     return jsonify({"articles": articles, "stats": stats})
+
+
+@app.route("/test", methods=["GET"])
+def db_testing():
+    repo.fetch_news(5)
+    return "nothing to see"
