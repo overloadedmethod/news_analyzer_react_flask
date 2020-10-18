@@ -42,5 +42,9 @@ def news_and_stats():
 
 @app.route("/test", methods=["GET"])
 def db_testing():
-    repo.fetch_news(5)
-    return "nothing to see"
+    fetched = fetch_last_news("test_tokens", 5)
+    articles = fetched["articles"] if "articles" in fetched else []
+    stats = proccess_articles(fetched)
+    repo.store_news(articles, stats)
+    articles, stats = repo.fetch_news(5)
+    return jsonify({"articles": articles, "stats": stats})
