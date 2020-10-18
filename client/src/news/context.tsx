@@ -7,6 +7,7 @@ const initialState = {
   }[],
   words: {} as Record<string, number>,
   access_token: "" as string,
+  amount: 5,
 };
 
 type NewsActions = "SET_ARTICLES" | "SET_WORDS" | "SET_TOKEN";

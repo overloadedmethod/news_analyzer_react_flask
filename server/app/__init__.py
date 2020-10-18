@@ -3,7 +3,7 @@ __author__ = "Vladimir"
 from app.celery import make_celery
 from app.repo import Repo
 from settings import CELERY_BROKER, CELERY_RESULTS, MONGODB_URI
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from app.words_utils import proccess_articles
 from .tasks import add_together, fetch_for_day, fetch_last_news
@@ -26,11 +26,13 @@ def index_page():
 
 @app.route("/news", methods=["GET"])
 def news_and_stats():
-    articles, stats = repo.fetch_news()
-    if any(articles):
+    token = request.args.get("token")
+    amount = int(request.args.get("amount"))
+    articles, stats = repo.fetch_news(amount)
+    if articles:
         return jsonify({"articles": articles, "stats": stats})
 
-    fetched = fetch_last_news(5)
+    fetched = fetch_last_news(token, amount)
     articles = fetched["articles"] if "articles" in fetched else []
     stats = proccess_articles(fetched)
     repo.store_news(articles, stats)

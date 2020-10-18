@@ -18,7 +18,7 @@ def fetch_for_day(day):
     pass
 
 
-def fetch_last_news(amount: int):
+def fetch_last_news(token: str, amount: int):
     return {
         "status": "ok",
         "totalResults": 6477,
