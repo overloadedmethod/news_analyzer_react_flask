@@ -1,23 +1,9 @@
-# Python Flask, Celery and MongoDB
-This is a simple app written in Python Flask with MongoDB mongodb database.
-Celery is used to manage task queue.
+# This application uses flask-executer and flask_executor in order to run
 
+## install
 
-### Run App (python 3)
-Below are the steps required to run this app successfully... good luck.
+pip install -r requirements.txt
 
-##### `creation of virtual environment by executing the command venv`
->$ python3 -m venv /path-to-project/venv3
+## Run App (python 3)
 
->$ source ./venv3/bin/activate
-
-##### `install requirements`
->$ pip install -r requirement.txt
-
-
-##### `run flask app (in debug mode)`
->$ python run.py
-
-
-##### `run celery task queue (in debug mode)`
->$ celery worker -A app.celery --loglevel=debug
+python run.py
