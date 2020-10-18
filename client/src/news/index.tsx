@@ -7,9 +7,10 @@ import React, {
 } from "react";
 import styled from "styled-components";
 
-import NewsContext, { NewsProvider } from "./context";
+import NewsContext from "./context";
 import NewsArticles from "./articles";
 import NewsWords from "./words";
+import Days from "./days";
 
 const Box = styled.div`
   background-color: #f7fff7;
@@ -81,6 +82,25 @@ export const NewsAnalyzerHeader = () => {
     [dispatch, access_token, amount, days]
   );
 
+  const fetchDays = useCallback(async () => {
+    const resp = await fetch(`/fetch_days?token=${access_token}`, {
+      method: "get",
+    });
+    const result = await resp.json();
+    if (result.length) {
+      dispatch({ type: "SET_DAYS_AGGREGATION", payload: result });
+      return;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const snd_try = await fetch(`/fetch_days?token=${access_token}`, {
+      method: "get",
+    });
+    const res = await snd_try.json();
+    dispatch({ type: "SET_DAYS_AGGREGATION", payload: res });
+  }, [dispatch, access_token]);
+
   return (
     <RefreshPanel>
       <Button>
@@ -107,25 +127,22 @@ export const NewsAnalyzerHeader = () => {
         Fetch explicit amount and days
       </FetchNewsFeed>
       <FetchNewsFeed onClick={getNews(7, 100)}>Fetch Last 100</FetchNewsFeed>
-      <FetchNewsFeed onClick={getNews(7, 200)}>
-        Request concurrent loading 7 days
-      </FetchNewsFeed>
-      <FetchNewsFeed onClick={getNews(7, 200)}>
-        Show loaded 7 days
-      </FetchNewsFeed>
+
+      <FetchNewsFeed onClick={fetchDays}>Show loaded 7 days</FetchNewsFeed>
     </RefreshPanel>
   );
 };
 
 export const NewsAnalyzer = () => {
+  const [{ articles, words, days_aggregation }] = useContext(NewsContext);
+
   return (
-    <NewsProvider>
-      <Box>
-        <NewsAnalyzerHeader />
-        <NewsWords />
-        <NewsArticles />
-      </Box>
-    </NewsProvider>
+    <Box>
+      <NewsAnalyzerHeader />
+      {!!days_aggregation.length && <Days />}
+      <NewsWords words={words} />
+      <NewsArticles articles={articles} />
+    </Box>
   );
 };
 

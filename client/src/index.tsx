@@ -3,10 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import News from "./news";
 import * as serviceWorker from "./serviceWorker";
-
+import { NewsProvider } from "./news/context";
 ReactDOM.render(
   <React.StrictMode>
-    <News />
+    <NewsProvider>
+      <News />
+    </NewsProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

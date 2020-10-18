@@ -9,9 +9,19 @@ const initialState = {
   access_token: "" as string,
   amount: 5,
   days: 7,
+  days_aggregation: [] as {
+    day: number;
+    stats: Record<string, number>;
+    articles: {
+      title: string;
+      details: string;
+    }[];
+    words: Record<string, number>;
+  }[],
 };
 
 type NewsActions =
+  | "SET_DAYS_AGGREGATION"
   | "SET_ARTICLES"
   | "SET_WORDS"
   | "SET_TOKEN"
@@ -22,6 +32,10 @@ const actions: Record<
   string,
   (prev: typeof initialState, change: any) => typeof initialState
 > = {
+  SET_DAYS_AGGREGATION: (prev, days_aggregation) => ({
+    ...prev,
+    days_aggregation,
+  }),
   SET_ARTICLES: (prev, articles) => ({ ...prev, articles }),
   SET_WORDS: (prev, words) => ({ ...prev, words }),
   SET_TOKEN: (prev, access_token) => ({ ...prev, access_token }),

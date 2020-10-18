@@ -29,9 +29,7 @@ const Amount = styled.span`
   padding: 0.5rem;
 `;
 
-export const Words = () => {
-  const [{ words }] = useContext(NewsContext);
-
+export const Words = ({ words = {} }: { words: Record<string, number> }) => {
   return (
     <WordsBox>
       {Object.entries(words).map(([word, amount]) => (

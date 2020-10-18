@@ -52,7 +52,7 @@ def db_fetch_days():
     token = request.args.get("token")
     for day in range(7):
         executor.submit(fetch_for_day, day, token)
-    return None
+    return jsonify([])
 
 
 @app.route("/load_days", methods=["GET"])

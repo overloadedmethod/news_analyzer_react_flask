@@ -22,9 +22,14 @@ const ArticleDescription = styled.div`
   font-size: 1rem;
 `;
 
-export const Articles = () => {
-  const [{ articles }] = useContext(NewsContext);
-
+export const Articles = ({
+  articles,
+}: {
+  articles: {
+    title: string;
+    details: string;
+  }[];
+}) => {
   return (
     <ArticlesBox>
       {articles.map(({ title, description }: any, index) => (
