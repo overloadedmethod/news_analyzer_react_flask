@@ -54,7 +54,7 @@ const Input = styled.input`
 `;
 
 export const NewsAnalyzerHeader = () => {
-  const [{ access_token, amount }, dispatch] = useContext(NewsContext);
+  const [{ access_token, amount, days }, dispatch] = useContext(NewsContext);
 
   const onTokenChange = (val: any) =>
     dispatch({ type: "SET_TOKEN", payload: val.target.value });
@@ -62,15 +62,24 @@ export const NewsAnalyzerHeader = () => {
   const onAmountChange = (val: any) =>
     dispatch({ type: "SET_AMOUNT", payload: val.target.value });
 
-  const getNews = useCallback(async () => {
-    const resp = await fetch(`/news?token=${access_token}&amount=${amount}`, {
-      method: "get",
-    });
-    const result = await resp.json();
+  const onDaysChange = (val: any) =>
+    dispatch({ type: "SET_DAYS", payload: val.target.value });
 
-    dispatch({ type: "SET_ARTICLES", payload: result.articles });
-    dispatch({ type: "SET_WORDS", payload: result.stats });
-  }, [dispatch, access_token, amount]);
+  const getNews = useCallback(
+    (days: number, amount: number) => async () => {
+      const resp = await fetch(
+        `/news?token=${access_token}&amount=${amount}&days=${days}`,
+        {
+          method: "get",
+        }
+      );
+      const result = await resp.json();
+
+      dispatch({ type: "SET_ARTICLES", payload: result.articles });
+      dispatch({ type: "SET_WORDS", payload: result.stats });
+    },
+    [dispatch, access_token, amount, days]
+  );
 
   return (
     <RefreshPanel>
@@ -87,7 +96,18 @@ export const NewsAnalyzerHeader = () => {
         type="number"
         min={1}
         max={500}></Input>
-      <FetchNewsFeed onClick={getNews}>Fetch News</FetchNewsFeed>
+      <Input
+        onChange={onDaysChange}
+        placeholder="days"
+        value={days}
+        type="number"
+        min={1}
+        max={500}></Input>
+      <FetchNewsFeed onClick={getNews(days, amount)}>
+        Fetch explicit amount and days
+      </FetchNewsFeed>
+      <FetchNewsFeed onClick={getNews(-1, 100)}>Fetch Last 100</FetchNewsFeed>
+      <FetchNewsFeed onClick={getNews(7, -1)}>Fetch Last 7 days</FetchNewsFeed>
     </RefreshPanel>
   );
 };

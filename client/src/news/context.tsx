@@ -8,9 +8,15 @@ const initialState = {
   words: {} as Record<string, number>,
   access_token: "" as string,
   amount: 5,
+  days: 7,
 };
 
-type NewsActions = "SET_ARTICLES" | "SET_WORDS" | "SET_TOKEN" | "SET_AMOUNT";
+type NewsActions =
+  | "SET_ARTICLES"
+  | "SET_WORDS"
+  | "SET_TOKEN"
+  | "SET_AMOUNT"
+  | "SET_DAYS";
 
 const actions: Record<
   string,
@@ -20,6 +26,7 @@ const actions: Record<
   SET_WORDS: (prev, words) => ({ ...prev, words }),
   SET_TOKEN: (prev, access_token) => ({ ...prev, access_token }),
   SET_AMOUNT: (prev, amount) => ({ ...prev, amount }),
+  SET_DAYS: (prev, days) => ({ ...prev, days }),
 };
 
 const reducer = (

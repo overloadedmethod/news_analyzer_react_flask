@@ -31,7 +31,7 @@ def index_page():
 def news_and_stats():
     token = request.args.get("token")
     amount = int(request.args.get("amount"))
-    articles, stats = repo.fetch_news(amount)
+    articles, stats = repo.fetch_news_by_amount(amount)
     if articles:
         return jsonify({"articles": articles, "stats": stats})
 
@@ -40,6 +40,12 @@ def news_and_stats():
     stats = proccess_articles(fetched)
     repo.store_news(articles, stats)
     return jsonify({"articles": articles, "stats": stats})
+
+
+@app.route("/news/day")
+def fetch_for_day():
+    token = request.args.get("token")
+    day = request.args.get("day")
 
 
 @app.route("/test", methods=["GET"])
