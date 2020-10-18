@@ -1,17 +1,29 @@
+from flask_executor.executor import Executor
 from settings import CELERY_BROKER, CELERY_RESULTS
-from celery import Celery
+
+# from celery import Celery
 from flask import Flask
 
 flask = Flask(__name__)
 
+executor = Executor(flask)
 
-app = Celery(__name__, broker=CELERY_BROKER, backend=CELERY_RESULTS)
+
+@executor.job
+def fib(n):
+    if n <= 2:
+        return 1
+    else:
+        return fib(n - 1) + fib(n - 2)
 
 
-@app.task()
-def add_together(a, b):
-    print("celery is called")
-    return a + b
+# app = Celery(__name__, broker=CELERY_BROKER, backend=CELERY_RESULTS)
+
+
+# @app.task()
+# def add_together(a, b):
+#     print("celery is called")
+#     return a + b
 
 
 def fetch_for_day(day):

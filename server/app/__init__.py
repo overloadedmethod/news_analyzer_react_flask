@@ -1,19 +1,21 @@
 __author__ = "Vladimir"
-
+from datetime import datetime, timedelta
 from app.celery import make_celery
 from app.repo import Repo
 from settings import CELERY_BROKER, CELERY_RESULTS, MONGODB_URI
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo
 from app.words_utils import proccess_articles
-from .tasks import add_together, fetch_for_day, fetch_last_news
+from .tasks import fetch_for_day, fetch_last_news, fib
 from app.news_fetcher import Fetcher
+
 
 app = Flask(__name__)
 app.config["CELERY_BROKER"] = CELERY_BROKER
 app.config["CELERY_RESULTS"] = CELERY_RESULTS
 app.config["MONGO_URI"] = MONGODB_URI
 celery = make_celery(app)
+
 
 mongo = PyMongo(app, f"{MONGODB_URI}/news_analyzer")
 
@@ -42,6 +44,6 @@ def news_and_stats():
 
 @app.route("/test", methods=["GET"])
 def db_testing():
-    articles, stats = repo.fetch_news(8)
-
-    return jsonify({"articles": articles, "stats": stats})
+    from_date = datetime.now() - timedelta(days=7)
+    fetch = Fetcher().set_amount(10).set_day_before(3).fetch()
+    return "OK"
