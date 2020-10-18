@@ -44,15 +44,19 @@ def news_and_stats():
     return jsonify({"articles": articles, "stats": stats})
 
 
-# @app.route("/test", methods=["GET"])
-# def db_testing():
-#     executor.submit_stored("fibonacci", fib, 10)
-#     future = executor.futures.pop("fibonacci")
-#     return jsonify({"result": future.result()})
+@app.route("/fetch_days", methods=["GET"])
+def db_fetch_days():
+    days = repo.fetch_days()
+    if any(days):
+        return jsonify(days)
+    token = request.args.get("token")
+    for day in range(7):
+        executor.submit(fetch_for_day, day, token)
+    return None
 
 
-@app.route("/test", methods=["GET"])
-def db_testing():
+@app.route("/load_days", methods=["GET"])
+def db_load_days():
     token = request.args.get("token")
     for day in range(7):
         executor.submit(fetch_for_day, day, token)

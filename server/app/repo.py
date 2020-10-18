@@ -39,3 +39,7 @@ class Repo:
                 "timestamp": int(datetime.utcnow().timestamp()),
             }
         )
+
+    def fetch_days(self):
+        vals = list(self.driver.db.days.find({}, {"_id": False}))
+        return vals

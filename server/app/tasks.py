@@ -17,7 +17,7 @@ repo = Repo(mongo)
 
 
 def fetch_for_day(day: int, token: str):
-    fetched = Fetcher(token).set_day_before(day).set_amount(3).fetch()
+    fetched = Fetcher(token).set_day_before(day).set_amount(30).fetch()
     articles = fetched["articles"] if "articles" in fetched else []
     stats = proccess_articles(fetched)
     repo.store_day(day, articles, stats)
